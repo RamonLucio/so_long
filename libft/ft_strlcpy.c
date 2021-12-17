@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 16:29:26 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/08/27 13:30:54 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/17 14:30:40 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,27 @@
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	char		*destination;
 	const char	*source;
 	size_t		destination_size;
-	size_t		ch;
 
-	destination = dst;
 	source = src;
 	destination_size = dstsize;
 	if (destination_size != 0)
 	{
 		while (--destination_size)
 		{
-			ch = (*destination++ = *source++);
-			if (ch == '\0')
+			if (*source == '\0')
+			{
+				*dst++ = *source++;
 				break ;
+			}
+			*dst++ = *source++;
 		}
 	}
 	if (destination_size == 0)
 	{
 		if (dstsize != 0)
-			*destination = '\0';
+			*dst = '\0';
 		while (*source++)
 			;
 	}
