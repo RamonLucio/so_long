@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 20:08:33 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/17 20:13:36 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	main(int argc, char *argv[])
 
 	if (argc != 2)
 	{
-		printf("The program must have one argument\n");
+		printf("Error\nThe program must have one argument!\n");
 		return (1);
 	}
 	else
@@ -86,7 +86,11 @@ int	main(int argc, char *argv[])
 	{
 		if (*map != '0' && *map != '1' && *map != 'C' && *map != 'E'
 			&& *map != 'P' && *map != '\n')
-			printf("%c", *map);
+		{
+			printf("Error\n%s contains forbidden '%c' character\n",
+				argv[1], *map);
+			return (1);
+		}
 		map++;
 	}
 	ptr_to.mlx = mlx_init();
