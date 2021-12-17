@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 20:05:18 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/17 20:08:33 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,23 @@ int	main(int argc, char *argv[])
 	char	*map;
 	char	*temp;
 
-	file_descriptor = open(argv[1], O_RDONLY);
-	map = ft_strdup("");
-	while (1)
+	if (argc != 2)
 	{
-		temp = get_next_line(file_descriptor);
-		if (temp == NULL)
-			break ;
-		map = ft_strjoin(map, temp);
-		free(temp);
+		printf("The program must have one argument\n");
+		return (1);
+	}
+	else
+	{
+		file_descriptor = open(argv[1], O_RDONLY);
+		map = ft_strdup("");
+		while (1)
+		{
+			temp = get_next_line(file_descriptor);
+			if (temp == NULL)
+				break ;
+			map = ft_strjoin(map, temp);
+			free(temp);
+		}
 	}
 	while (*map)
 	{
