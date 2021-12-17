@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 13:11:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 00:40:35 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/17 14:45:27 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <X11/keysym.h>
 # include <X11/X.h>
 # include "./libft/libft.h"
+# include <stdio.h>
+# include <fcntl.h>
 
 typedef struct s_img
 {
