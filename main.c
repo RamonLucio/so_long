@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 19:52:32 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/17 20:05:18 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,13 @@ int	main(int argc, char *argv[])
 			break ;
 		map = ft_strjoin(map, temp);
 		free(temp);
+	}
+	while (*map)
+	{
+		if (*map != '0' && *map != '1' && *map != 'C' && *map != 'E'
+			&& *map != 'P' && *map != '\n')
+			printf("%c", *map);
+		map++;
 	}
 	ptr_to.mlx = mlx_init();
 	if (ptr_to.mlx == NULL)
