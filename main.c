@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 20:13:36 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/22 01:18:17 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,45 @@ int	close_window(t_ptr *ptr_to)
 	return (0);
 }
 
+void	parse_walls(char *line, int lines_read, char *map)
+{
+	char	*ptr_to_newline;
+
+	if (line != NULL)
+	{
+		if (*line != '1')
+			printf("KO\n");
+		ptr_to_newline = ft_strchr(line, '\n');
+		if (*--ptr_to_newline != '1')
+			printf("KO\n");
+		if (lines_read == 1)
+		{
+			while (*line != '\n')
+			{
+				if (*line++ != '1')
+					printf("KO\n");
+			}
+		}
+	}
+	else
+	{
+		ptr_to_newline = ft_strrchr(map, '\n');
+		ptr_to_newline--;
+		while (*ptr_to_newline != '\n')
+		{
+			if (*ptr_to_newline-- != '1')
+				printf("KO\n");
+		}
+	}
+}
+
 int	main(int argc, char *argv[])
 {
 	t_ptr	ptr_to;
 	int		file_descriptor;
 	char	*map;
-	char	*temp;
+	char	*line;
+	int		lines_read;
 
 	if (argc != 2)
 	{
@@ -73,13 +106,15 @@ int	main(int argc, char *argv[])
 	{
 		file_descriptor = open(argv[1], O_RDONLY);
 		map = ft_strdup("");
-		while (1)
+		lines_read = 0;
+		while (++lines_read)
 		{
-			temp = get_next_line(file_descriptor);
-			if (temp == NULL)
+			line = get_next_line(file_descriptor);
+			parse_walls(line, lines_read, map);
+			if (line == NULL)
 				break ;
-			map = ft_strjoin(map, temp);
-			free(temp);
+			map = ft_strjoin(map, line);
+			free(line);
 		}
 	}
 	while (*map)
