@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 17:42:23 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 12:58:24 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/30 19:43:42 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,6 @@ static void	assign_line(int bytes, char **sta_buf, char **buf, char **line)
 ** 		Read line: correct behavior
 ** 		NULL: nothing else to read or an error occurred
 */
-
-#define BUFFER_SIZE 42
 
 char	*get_next_line(int fd)
 {

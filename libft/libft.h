@@ -6,16 +6,16 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 16:31:27 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/17 12:57:39 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/30 19:43:49 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
-
 # include	<stddef.h>
 # include	<stdlib.h>
 # include	<unistd.h>
+# define BUFFER_SIZE 42
 
 int		ft_atoi(const char *str);
 void	ft_bzero(void *s, size_t n);
