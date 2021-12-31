@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/30 20:05:13 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/31 19:56:10 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	check_top_and_bottom_wall(char **map_lines, int i, int j)
 		if (map_lines[i][j++] != '1')
 			return (INVALID_WALL);
 	}
-	return (VALID_WALL);
+	return (VALID_MAP);
 }
 
 void	free_map_array(int array_length, char **array, char **map, int error)
@@ -113,8 +113,31 @@ void	free_map_array(int array_length, char **array, char **map, int error)
 	while (--array_length >= 0)
 		free(array[array_length]);
 	free(array);
+	if (error == NOT_RECTANGULAR)
+		exit_program(map, "Error\nThe map must be rectangular\n");
 	if (error == INVALID_WALL)
 		exit_program(map, "Error\nThe map must be surrounded by walls.\n");
+}
+
+void	is_rectangular(char **map)
+{
+	char	**map_lines;
+	int		array_length;
+	int		i;
+	int		line_length;
+	int		temp;
+
+	map_lines = ft_split(*map, '\n');
+	array_length = array_len(map_lines);
+	i = 0;
+	line_length = ft_strlen(map_lines[i]);
+	while (++i < array_length)
+	{
+		temp = ft_strlen(map_lines[i]);
+		if (line_length != temp)
+			free_map_array(array_length, map_lines, map, NOT_RECTANGULAR);
+	}
+	free_map_array(array_length, map_lines, map, VALID_MAP);
 }
 
 void	parse_walls(char **map)
@@ -140,7 +163,7 @@ void	parse_walls(char **map)
 	}
 	if (check_top_and_bottom_wall(map_lines, i, 0))
 		free_map_array(array_length, map_lines, map, INVALID_WALL);
-	free_map_array(array_length, map_lines, map, VALID_WALL);
+	free_map_array(array_length, map_lines, map, VALID_MAP);
 }
 
 int	handle_no_event(t_ptr *ptr_to)
@@ -197,6 +220,7 @@ int	main(int argc, char *argv[])
 	file_descriptor = open_map(argc, argv);
 	map = read_map(file_descriptor);
 	parse_characters(&map);
+	is_rectangular(&map);
 	parse_walls(&map);
 	free(map);
 	ptr_to.mlx = mlx_init();

@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 13:11:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/30 19:49:34 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2021/12/30 23:47:03 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
 # include "./libft/libft.h"
 # include <stdio.h>
 # include <fcntl.h>
-# define INVALID_WALL 1
-# define VALID_WALL 0
+# define VALID_MAP 0
+# define NOT_RECTANGULAR 1
+# define INVALID_WALL 2
 
 typedef struct s_img
 {
