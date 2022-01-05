@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/31 19:56:10 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/05 00:56:06 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	open_map(int argc, char *argv[])
 
 	if (argc != 2)
 	{
-		printf("Error\nThe program must have one argument!\n");
+		printf("Error\nThe program must have one argument\n");
 		exit(1);
 	}
 	file_descriptor = open(argv[1], O_RDONLY);
@@ -53,21 +53,21 @@ char	*read_map(int file_descriptor)
 	return (map);
 }
 
-void	exit_program(char **map, char *message)
+void	exit_program(t_map *map, char *message)
 {
 	printf("%s", message);
-	free(*map);
+	free(map->string);
 	exit(1);
 }
 
-void	parse_characters(char **map)
+void	parse_characters(t_map *map)
 {
 	char	*map_ptr;
 	int		collectible;
 	int		exit;
 	int		start;
 
-	map_ptr = *map;
+	map_ptr = map->string;
 	collectible = 0;
 	exit = 0;
 	start = 0;
@@ -98,17 +98,7 @@ int	array_len(char **array)
 	return (array_length);
 }
 
-int	check_top_and_bottom_wall(char **map_lines, int i, int j)
-{
-	while (map_lines[i][j])
-	{
-		if (map_lines[i][j++] != '1')
-			return (INVALID_WALL);
-	}
-	return (VALID_MAP);
-}
-
-void	free_map_array(int array_length, char **array, char **map, int error)
+void	free_map_array(int array_length, char **array, t_map *map, int error)
 {
 	while (--array_length >= 0)
 		free(array[array_length]);
@@ -119,123 +109,177 @@ void	free_map_array(int array_length, char **array, char **map, int error)
 		exit_program(map, "Error\nThe map must be surrounded by walls.\n");
 }
 
-void	is_rectangular(char **map)
+void	is_rectangular(t_map *map, char **map_array)
 {
-	char	**map_lines;
 	int		array_length;
 	int		i;
 	int		line_length;
 	int		temp;
 
-	map_lines = ft_split(*map, '\n');
-	array_length = array_len(map_lines);
+	array_length = array_len(map_array);
 	i = 0;
-	line_length = ft_strlen(map_lines[i]);
+	line_length = ft_strlen(map_array[i]);
 	while (++i < array_length)
 	{
-		temp = ft_strlen(map_lines[i]);
+		temp = ft_strlen(map_array[i]);
 		if (line_length != temp)
-			free_map_array(array_length, map_lines, map, NOT_RECTANGULAR);
+			free_map_array(array_length, map_array, map, NOT_RECTANGULAR);
 	}
-	free_map_array(array_length, map_lines, map, VALID_MAP);
 }
 
-void	parse_walls(char **map)
+int	check_top_and_bottom_wall(char **map_array, int i, int j)
 {
-	char	**map_lines;
+	while (map_array[i][j])
+	{
+		if (map_array[i][j++] != '1')
+			return (INVALID_WALL);
+	}
+	return (VALID_MAP);
+}
+
+void	parse_walls(t_map *map, char **map_array)
+{
 	int		array_length;
 	int		i;
 	int		j;
 
-	map_lines = ft_split(*map, '\n');
-	array_length = array_len(map_lines);
+	array_length = array_len(map_array);
 	i = 0;
 	j = 0;
-	if (check_top_and_bottom_wall(map_lines, i, j))
-		free_map_array(array_length, map_lines, map, INVALID_WALL);
-	j = ft_strlen(map_lines[0]) - 1;
+	if (check_top_and_bottom_wall(map_array, i, j))
+		free_map_array(array_length, map_array, map, INVALID_WALL);
+	j = ft_strlen(map_array[0]) - 1;
 	while (++i < array_length - 1)
 	{
-		if (map_lines[i][0] != '1')
-			free_map_array(array_length, map_lines, map, INVALID_WALL);
-		if (map_lines[i][j] != '1')
-			free_map_array(array_length, map_lines, map, INVALID_WALL);
+		if (map_array[i][0] != '1')
+			free_map_array(array_length, map_array, map, INVALID_WALL);
+		if (map_array[i][j] != '1')
+			free_map_array(array_length, map_array, map, INVALID_WALL);
 	}
-	if (check_top_and_bottom_wall(map_lines, i, 0))
-		free_map_array(array_length, map_lines, map, INVALID_WALL);
-	free_map_array(array_length, map_lines, map, VALID_MAP);
+	if (check_top_and_bottom_wall(map_array, i, 0))
+		free_map_array(array_length, map_array, map, INVALID_WALL);
+	free_map_array(array_length, map_array, map, VALID_MAP);
 }
 
-int	handle_no_event(t_ptr *ptr_to)
+void	parse_map(t_map *map)
 {
-	int	i;
-	int	j;
+	char	**map_array;
 
-	i = 0;
-	j = 0;
-	ptr_to->tile.img = mlx_xpm_file_to_image(ptr_to->mlx, "assets/tile.xpm",
-			&ptr_to->tile.width, &ptr_to->tile.height);
-	while (j < 512)
+	parse_characters(map);
+	map_array = ft_split(map->string, '\n');
+	is_rectangular(map, map_array);
+	parse_walls(map, map_array);
+}
+
+int	measure_columns(t_map *map)
+{
+	char	*map_newline;
+	int		line_size;
+
+	map_newline = ft_strchr(map->string, '\n');
+	if (map_newline)
+		line_size = map_newline - map->string;
+	else
+		line_size = 0;
+	return (line_size);
+}
+
+int	measure_lines(t_map *map)
+{
+	char	**map_lines;
+	int		array_length;
+
+	map_lines = ft_split(map->string, '\n');
+	array_length = array_len(map_lines);
+	free_map_array(array_length, map_lines, map, 0);
+	return (array_length);
+}
+
+int	handle_no_event(t_map *map)
+{
+	int	column;
+	int	line;
+	int	index;
+
+	column = 0;
+	line = 0;
+	index = 0;
+	map->tile.img = mlx_xpm_file_to_image(map->mlx, "assets/tile.xpm",
+			&map->tile.width, &map->tile.height);
+	map->wall.img = mlx_xpm_file_to_image(map->mlx, "assets/wall.xpm",
+			&map->wall.width, &map->wall.height);
+	map->coin.img = mlx_xpm_file_to_image(map->mlx, "assets/coin.xpm",
+			&map->coin.width, &map->coin.height);
+	while (line < map->height)
 	{
-		while (i < 512)
+		while (column < map->width)
 		{
-			mlx_put_image_to_window(
-				ptr_to->mlx, ptr_to->win, ptr_to->tile.img, i, j);
-			i += 16;
+			if (map->string[index] == '0')
+				mlx_put_image_to_window(map->mlx, map->window, map->tile.img, column, line);
+			if (map->string[index] == '1')
+				mlx_put_image_to_window(map->mlx, map->window, map->wall.img, column, line);
+			if (map->string[index] == 'C')
+				mlx_put_image_to_window(map->mlx, map->window, map->coin.img, column, line);
+			column += map->tile.width;
+			index++;
 		}
-		i = 0;
-		j += 16;
+		column = 0;
+		line += map->tile.height;
+		index++;
 	}
-	mlx_destroy_image(ptr_to->mlx, ptr_to->tile.img);
+	mlx_destroy_image(map->mlx, map->tile.img);
+	mlx_destroy_image(map->mlx, map->wall.img);
+	mlx_destroy_image(map->mlx, map->coin.img);
 	return (0);
 }
 
-int	escape_window(int keycode, t_ptr *ptr_to)
+int	escape_window(int keycode, t_map *map)
 {
 	if (keycode == XK_Escape)
 	{
-		mlx_destroy_window(ptr_to->mlx, ptr_to->win);
-		mlx_destroy_display(ptr_to->mlx);
-		free(ptr_to->mlx);
+		mlx_destroy_window(map->mlx, map->window);
+		mlx_destroy_display(map->mlx);
+		free(map->mlx);
+		free(map->string);
 		exit(0);
 	}
 	return (0);
 }
 
-int	close_window(t_ptr *ptr_to)
+int	close_window(t_map *map)
 {
-	mlx_destroy_window(ptr_to->mlx, ptr_to->win);
-	mlx_destroy_display(ptr_to->mlx);
-	free(ptr_to->mlx);
+	mlx_destroy_window(map->mlx, map->window);
+	mlx_destroy_display(map->mlx);
+	free(map->mlx);
+	free(map->string);
 	exit(0);
 	return (0);
 }
 
 int	main(int argc, char *argv[])
 {
-	t_ptr	ptr_to;
 	int		file_descriptor;
-	char	*map;
+	t_map	map;
 
 	file_descriptor = open_map(argc, argv);
-	map = read_map(file_descriptor);
-	parse_characters(&map);
-	is_rectangular(&map);
-	parse_walls(&map);
-	free(map);
-	ptr_to.mlx = mlx_init();
-	if (ptr_to.mlx == NULL)
+	map.string = read_map(file_descriptor);
+	parse_map(&map);
+	map.mlx = mlx_init();
+	if (map.mlx == NULL)
 		return (1);
-	ptr_to.win = mlx_new_window(ptr_to.mlx, 512, 512, "./so_long");
-	if (ptr_to.win == NULL)
+	map.width = measure_columns(&map) * 16;
+	map.height = measure_lines(&map) * 16;
+	map.window = mlx_new_window(map.mlx, map.width, map.height, argv[0]);
+	if (map.window == NULL)
 	{
-		free(ptr_to.win);
+		free(map.window);
 		return (1);
 	}
-	mlx_loop_hook(ptr_to.mlx, handle_no_event, &ptr_to);
-	mlx_hook(ptr_to.win, KeyRelease, KeyReleaseMask, &escape_window, &ptr_to);
-	mlx_hook(ptr_to.win, DestroyNotify, StructureNotifyMask, &close_window,
-		&ptr_to);
-	mlx_loop(ptr_to.mlx);
+	mlx_loop_hook(map.mlx, handle_no_event, &map);
+	mlx_hook(map.window, KeyRelease, KeyReleaseMask, &escape_window, &map);
+	mlx_hook(map.window, DestroyNotify, StructureNotifyMask, &close_window,
+		&map);
+	mlx_loop(map.mlx);
+	free(map.string);
 	return (0);
 }
