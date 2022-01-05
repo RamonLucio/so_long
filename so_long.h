@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 13:11:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2021/12/30 23:47:03 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/05 00:50:30 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,16 @@ typedef struct s_img
 	int		height;
 }				t_img;
 
-typedef struct s_ptr
+typedef struct s_map
 {
 	void	*mlx;
-	void	*win;
+	void	*window;
+	char	*string;
+	int		width;
+	int		height;
 	t_img	tile;
-}				t_ptr;
+	t_img	wall;
+	t_img	coin;
+}				t_map;
 
 #endif
