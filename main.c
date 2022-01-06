@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/05 00:56:06 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/06 13:15:45 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,12 +173,12 @@ void	parse_map(t_map *map)
 
 int	measure_columns(t_map *map)
 {
-	char	*map_newline;
+	char	*ptr_to_newline;
 	int		line_size;
 
-	map_newline = ft_strchr(map->string, '\n');
-	if (map_newline)
-		line_size = map_newline - map->string;
+	ptr_to_newline = ft_strchr(map->string, '\n');
+	if (ptr_to_newline)
+		line_size = ptr_to_newline - map->string;
 	else
 		line_size = 0;
 	return (line_size);
@@ -195,41 +195,66 @@ int	measure_lines(t_map *map)
 	return (array_length);
 }
 
-int	handle_no_event(t_map *map)
+void	read_xpm_to_image(t_map *map)
 {
-	int	column;
-	int	line;
-	int	index;
-
-	column = 0;
-	line = 0;
-	index = 0;
 	map->tile.img = mlx_xpm_file_to_image(map->mlx, "assets/tile.xpm",
 			&map->tile.width, &map->tile.height);
 	map->wall.img = mlx_xpm_file_to_image(map->mlx, "assets/wall.xpm",
 			&map->wall.width, &map->wall.height);
 	map->coin.img = mlx_xpm_file_to_image(map->mlx, "assets/coin.xpm",
 			&map->coin.width, &map->coin.height);
-	while (line < map->height)
-	{
-		while (column < map->width)
-		{
-			if (map->string[index] == '0')
-				mlx_put_image_to_window(map->mlx, map->window, map->tile.img, column, line);
-			if (map->string[index] == '1')
-				mlx_put_image_to_window(map->mlx, map->window, map->wall.img, column, line);
-			if (map->string[index] == 'C')
-				mlx_put_image_to_window(map->mlx, map->window, map->coin.img, column, line);
-			column += map->tile.width;
-			index++;
-		}
-		column = 0;
-		line += map->tile.height;
-		index++;
-	}
+	map->exit.img = mlx_xpm_file_to_image(map->mlx, "assets/exit.xpm",
+			&map->exit.width, &map->exit.height);
+	map->player.img = mlx_xpm_file_to_image(map->mlx, "assets/player.xpm",
+			&map->player.width, &map->player.height);
+}
+
+void	put_image_to_window(t_map *map)
+{
+	if (map->string[i] == '0')
+		mlx_put_image_to_window(map->mlx, map->window, map->tile.img, x, y);
+	if (map->string[i] == '1')
+		mlx_put_image_to_window(map->mlx, map->window, map->wall.img, x, y);
+	if (map->string[i] == 'C')
+		mlx_put_image_to_window(map->mlx, map->window, map->coin.img, x, y);
+	if (map->string[i] == 'E')
+		mlx_put_image_to_window(map->mlx, map->window, map->exit.img, x, y);
+	if (map->string[i] == 'P')
+		mlx_put_image_to_window(map->mlx, map->window, map->player.img, x, y);
+}
+
+void	destroy_image(t_map *map)
+{
 	mlx_destroy_image(map->mlx, map->tile.img);
 	mlx_destroy_image(map->mlx, map->wall.img);
 	mlx_destroy_image(map->mlx, map->coin.img);
+	mlx_destroy_image(map->mlx, map->exit.img);
+	mlx_destroy_image(map->mlx, map->player.img);
+}
+
+int	render_map(t_map *map)
+{
+	int	x;
+	int	y;
+	int	i;
+
+	x = 0;
+	y = 0;
+	i = 0;
+	read_xpm_to_image(map);
+	while (y < map->height)
+	{
+		while (x < map->width)
+		{
+			put_image_to_window(map);
+			x += map->tile.width;
+			i++;
+		}
+		x = 0;
+		y += map->tile.height;
+		i++;
+	}
+	destroy_image(map);
 	return (0);
 }
 
@@ -267,15 +292,15 @@ int	main(int argc, char *argv[])
 	map.mlx = mlx_init();
 	if (map.mlx == NULL)
 		return (1);
-	map.width = measure_columns(&map) * 16;
-	map.height = measure_lines(&map) * 16;
+	map.width = measure_columns(&map) * SPRITE_SIZE;
+	map.height = measure_lines(&map) * SPRITE_SIZE;
 	map.window = mlx_new_window(map.mlx, map.width, map.height, argv[0]);
 	if (map.window == NULL)
 	{
 		free(map.window);
 		return (1);
 	}
-	mlx_loop_hook(map.mlx, handle_no_event, &map);
+	mlx_loop_hook(map.mlx, render_map, &map);
 	mlx_hook(map.window, KeyRelease, KeyReleaseMask, &escape_window, &map);
 	mlx_hook(map.window, DestroyNotify, StructureNotifyMask, &close_window,
 		&map);

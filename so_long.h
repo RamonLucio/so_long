@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 13:11:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/05 00:50:30 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/06 12:13:57 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define VALID_MAP 0
 # define NOT_RECTANGULAR 1
 # define INVALID_WALL 2
+# define SPRITE_SIZE 16
 
 typedef struct s_img
 {
@@ -39,6 +40,8 @@ typedef struct s_map
 	t_img	tile;
 	t_img	wall;
 	t_img	coin;
+	t_img	exit;
+	t_img	player;
 }				t_map;
 
 #endif
