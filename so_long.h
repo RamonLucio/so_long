@@ -37,6 +37,9 @@ typedef struct s_map
 	char	*string;
 	int		width;
 	int		height;
+	int		collectibles;
+	int		exit_char;
+	int		start;
 	t_img	tile;
 	t_img	wall;
 	t_img	coin;

@@ -63,29 +63,26 @@ void	exit_program(t_map *map, char *message)
 void	parse_characters(t_map *map)
 {
 	char	*map_ptr;
-	int		collectible;
-	int		exit;
-	int		start;
 
 	map_ptr = map->string;
-	collectible = 0;
-	exit = 0;
-	start = 0;
+	map->collectibles = 0;
+	map->exit_char = 0;
+	map->start = 0;
 	while (*map_ptr)
 	{
 		if (*map_ptr != '0' && *map_ptr != '1' && *map_ptr != 'C'
 			&& *map_ptr != 'E' && *map_ptr != 'P' && *map_ptr != '\n')
-			exit_program(map, "Error\nMap contains forbidden character\n");
+			exit_program(map, "Error\nMap contains invalid character\n");
 		if (*map_ptr == 'C')
-			collectible++;
+			map->collectibles++;
 		if (*map_ptr == 'E')
-			exit++;
+			map->exit_char++;
 		if (*map_ptr == 'P')
-			start++;
+			map->start++;
 		map_ptr++;
 	}
-	if (collectible == 0 || exit == 0 || start == 0)
-		exit_program(map, "Error\nMap must have start, exit and collectible\n");
+	if (map->collectibles == 0 || map->exit_char == 0 || map->start == 0)
+		exit_program(map, "Error\nMap must have C, E, P characters\n");
 }
 
 int	array_len(char **array)
@@ -412,11 +409,11 @@ int	main(int argc, char *argv[])
 		free(map.window);
 		return (1);
 	}
-	render_map(&map);
+	mlx_loop_hook(map.mlx, render_map, &map);
 	map.movements = 0;
-	mlx_hook(map.window, KeyPress, KeyPressMask, &move_player, &map);
-	mlx_hook(map.window, KeyRelease, KeyReleaseMask, &escape_window, &map);
-	mlx_hook(map.window, DestroyNotify, StructureNotifyMask, &close_window,
+	mlx_hook(map.window, KeyPress, KeyPressMask, move_player, &map);
+	mlx_hook(map.window, KeyRelease, KeyReleaseMask, escape_window, &map);
+	mlx_hook(map.window, DestroyNotify, StructureNotifyMask, close_window,
 		&map);
 	mlx_loop(map.mlx);
 	free(map.string);
