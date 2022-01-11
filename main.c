@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 22:55:54 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/06 13:15:45 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:40:36 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ void	read_xpm_to_image(t_map *map)
 			&map->player.width, &map->player.height);
 }
 
-void	put_image_to_window(t_map *map)
+void	put_image_to_window(t_map *map, int x, int y, int i)
 {
 	if (map->string[i] == '0')
 		mlx_put_image_to_window(map->mlx, map->window, map->tile.img, x, y);
@@ -246,7 +246,7 @@ int	render_map(t_map *map)
 	{
 		while (x < map->width)
 		{
-			put_image_to_window(map);
+			put_image_to_window(map, x, y, i);
 			x += map->tile.width;
 			i++;
 		}
@@ -281,6 +281,118 @@ int	close_window(t_map *map)
 	return (0);
 }
 
+void	move_up(t_map *map)
+{
+	char	*player;
+	char	*char_above;
+
+	player = ft_strchr(map->string, 'P');
+	char_above = player - (map->width / SPRITE_SIZE) - 1;
+	if (*char_above == 'C' || *char_above == '0')
+	{
+		*char_above = 'P';
+		*player = '0';
+		map->movements++;
+		printf("Movements: %i\n", map->movements);
+	}
+	if (*char_above == 'E')
+	{
+		if (!ft_strchr(map->string, 'C'))
+		{
+			map->movements++;
+			printf("Movements: %i\n", map->movements);
+			close_window(map);
+		}
+	}
+}
+
+void	move_left(t_map *map)
+{
+	char	*player;
+
+	player = ft_strchr(map->string, 'P');
+	player--;
+	if (*player == 'C' || *player == '0')
+	{
+		*player = 'P';
+		*++player = '0';
+		map->movements++;
+		printf("Movements: %i\n", map->movements);
+	}
+	if (*player == 'E')
+	{
+		if (!ft_strchr(map->string, 'C'))
+		{
+			map->movements++;
+			printf("Movements: %i\n", map->movements);
+			close_window(map);
+		}
+	}
+}
+
+void	move_down(t_map *map)
+{
+	char	*player;
+	char	*char_below;
+
+	player = ft_strchr(map->string, 'P');
+	char_below = player + (map->width / SPRITE_SIZE) + 1;
+	if (*char_below == 'C' || *char_below == '0')
+	{
+		*char_below = 'P';
+		*player = '0';
+		map->movements++;
+		printf("Movements: %i\n", map->movements);
+	}
+	if (*char_below == 'E')
+	{
+		if (!ft_strchr(map->string, 'C'))
+		{
+			map->movements++;
+			printf("Movements: %i\n", map->movements);
+			close_window(map);
+		}
+	}
+}
+
+void	move_right(t_map *map)
+{
+	char	*player;
+
+	player = ft_strchr(map->string, 'P');
+	player++;
+	if (*player == 'C' || *player == '0')
+	{
+		*player = 'P';
+		*--player = '0';
+		map->movements++;
+		printf("Movements: %i\n", map->movements);
+	}
+	if (*player == 'E')
+	{
+		if (!ft_strchr(map->string, 'C'))
+		{
+			map->movements++;
+			printf("Movements: %i\n", map->movements);
+			close_window(map);
+		}
+	}
+}
+
+int	move_player(int keycode, t_map *map)
+{
+	if (keycode == XK_w || keycode == XK_Up)
+		move_up(map);
+	if (keycode == XK_a || keycode == XK_Left)
+		move_left(map);
+	if (keycode == XK_s || keycode == XK_Down)
+		move_down(map);
+	if (keycode == XK_d || keycode == XK_Right)
+		move_right(map);
+	render_map(map);
+	return (0);
+}
+
 int	main(int argc, char *argv[])
 {
 	int		file_descriptor;
@@ -300,7 +412,9 @@ int	main(int argc, char *argv[])
 		free(map.window);
 		return (1);
 	}
-	mlx_loop_hook(map.mlx, render_map, &map);
+	render_map(&map);
+	map.movements = 0;
+	mlx_hook(map.window, KeyPress, KeyPressMask, &move_player, &map);
 	mlx_hook(map.window, KeyRelease, KeyReleaseMask, &escape_window, &map);
 	mlx_hook(map.window, DestroyNotify, StructureNotifyMask, &close_window,
 		&map);

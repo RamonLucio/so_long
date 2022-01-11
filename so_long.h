@@ -42,6 +42,7 @@ typedef struct s_map
 	t_img	coin;
 	t_img	exit;
 	t_img	player;
+	int		movements;
 }				t_map;
 
 #endif
