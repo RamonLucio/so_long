@@ -390,6 +390,16 @@ int	move_player(int keycode, t_map *map)
 	return (0);
 }
 
+void	receive_events(t_map *map)
+{
+	mlx_loop_hook(map->mlx, render_map, map);
+	mlx_hook(map->window, KeyPress, KeyPressMask, move_player, map);
+	mlx_hook(map->window, KeyRelease, KeyReleaseMask, escape_window, map);
+	mlx_hook(map->window, DestroyNotify, StructureNotifyMask, close_window,
+		map);
+	mlx_loop(map->mlx);
+}
+
 int	main(int argc, char *argv[])
 {
 	int		file_descriptor;
@@ -409,13 +419,8 @@ int	main(int argc, char *argv[])
 		free(map.window);
 		return (1);
 	}
-	mlx_loop_hook(map.mlx, render_map, &map);
 	map.movements = 0;
-	mlx_hook(map.window, KeyPress, KeyPressMask, move_player, &map);
-	mlx_hook(map.window, KeyRelease, KeyReleaseMask, escape_window, &map);
-	mlx_hook(map.window, DestroyNotify, StructureNotifyMask, close_window,
-		&map);
-	mlx_loop(map.mlx);
+	receive_events(&map);
 	free(map.string);
 	return (0);
 }
