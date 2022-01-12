@@ -6,11 +6,20 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:04:52 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 19:08:33 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/13 00:22:21 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+/*
+	DESCRIPTION
+		Search for the 'P' character on map string and
+		if the character above is a collectible or an empty space
+		swap it with 'P' and replaces it with an empty space.
+		If it is an exit and there is no collectible left
+		in the empty string, exit program.
+*/
 
 static void	move_up(t_map *map)
 {
@@ -26,16 +35,22 @@ static void	move_up(t_map *map)
 		map->movements++;
 		printf("Movements: %i\n", map->movements);
 	}
-	if (*char_above == 'E')
+	if (*char_above == 'E' && !ft_strchr(map->string, 'C'))
 	{
-		if (!ft_strchr(map->string, 'C'))
-		{
-			map->movements++;
-			printf("Movements: %i\n", map->movements);
-			close_window(map);
-		}
+		map->movements++;
+		printf("Movements: %i\n", map->movements);
+		close_window(map);
 	}
 }
+
+/*
+	DESCRIPTION
+		Search for the 'P' character on map string and
+		if the previous character is a collectible or an empty space
+		swap it with 'P' and replaces it with an empty space.
+		If it is an exit and there is no collectible left
+		in the empty string, exit program.
+*/
 
 static void	move_left(t_map *map)
 {
@@ -60,6 +75,15 @@ static void	move_left(t_map *map)
 		}
 	}
 }
+
+/*
+	DESCRIPTION
+		Search for the 'P' character on map string and
+		if the character below is a collectible or an empty space
+		swap it with 'P' and replaces it with an empty space.
+		If it is an exit and there is no collectible left
+		in the empty string, exit program.
+*/
 
 static void	move_down(t_map *map)
 {
@@ -86,6 +110,15 @@ static void	move_down(t_map *map)
 	}
 }
 
+/*
+	DESCRIPTION
+		Search for the 'P' character on map string and
+		if the next character is a collectible or an empty space
+		swap it with 'P' and replaces it with an empty space.
+		If it is an exit and there is no collectible left
+		in the empty string, exit program.
+*/
+
 static void	move_right(t_map *map)
 {
 	char	*player;
@@ -109,6 +142,12 @@ static void	move_right(t_map *map)
 		}
 	}
 }
+
+/*
+	DESCRIPTION
+		If W, A, S or D or any arrow keys were pressed
+		call the respective function and render the map again
+*/
 
 int	move_player(int keycode, t_map *map)
 {

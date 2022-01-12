@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:08:27 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 19:08:26 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/13 00:43:10 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,17 @@ static void	destroy_image(t_map *map)
 	mlx_destroy_image(map->mlx, map->exit.img);
 	mlx_destroy_image(map->mlx, map->player.img);
 }
+
+/*
+	DESCRIPTION
+		Read all xpm files to an image struct.
+		
+		For all characters in map string, put respective
+		image struct to mlx window.
+
+		After put each image in respective window coordinate,
+		destroy image.
+*/
 
 int	render_map(t_map *map)
 {

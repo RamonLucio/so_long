@@ -6,11 +6,21 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 17:53:13 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 23:25:42 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/13 00:34:20 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+/*
+	DESCRIPTION
+		Iterate over map string and checks
+		if there the map has only these 5 characters: 0, 1, C, E, P
+		if there is at least one start, one exit and one collectible
+		and if there is no more than one start and one exit.
+		Else, exit program and display error message.
+		
+*/
 
 static void	parse_characters(t_map *map)
 {
@@ -39,6 +49,12 @@ static void	parse_characters(t_map *map)
 		exit_program(map, "Error\nMap must have one player and one exit\n");
 }
 
+/*
+	DESCRIPTION
+		Measure first line of map array and iterate over it
+		checking if there is any line bigger or smaller than the first
+*/
+
 static void	is_rectangular(t_map *map, char **map_array)
 {
 	int		array_length;
@@ -66,6 +82,14 @@ static int	check_top_and_bottom_wall(char **map_array, int i, int j)
 	}
 	return (VALID_MAP);
 }
+
+/*
+	DESCRIPTION
+		Take map array as parameter and check
+		if top and bottom lines have any character different from '1' and
+		if first and last character of each line are different from '1'.
+		Else, free map array, exit program and display error message
+*/
 
 static void	parse_walls(t_map *map, char **map_array)
 {

@@ -6,11 +6,20 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:02:36 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 19:09:10 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/13 00:09:55 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+/*
+	DESCRIPTION
+		Search for the first line break on map string
+		and count how many characters it has
+	RETURN VALUE
+		Returns line size if there is a line break or
+		else returns 0
+*/
 
 int	measure_columns(t_map *map)
 {
@@ -24,6 +33,14 @@ int	measure_columns(t_map *map)
 		line_size = 0;
 	return (line_size);
 }
+
+/*
+	DESCRIPTION
+		Split map string in lines using ft_split() and
+		count how many lines the array has using array_len()
+	RETURN VALUE
+		Returns array length or 0
+*/
 
 int	measure_lines(t_map *map)
 {
