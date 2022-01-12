@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 17:41:45 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 23:00:22 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:15:04 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	open_map(int argc, char *argv[])
 		print_error_and_exit("Error\nFile format is invalid\n");
 	else
 	{
-		if (file_format != ".ber")
+		if (ft_strncmp(file_format, ".ber", ft_strlen(file_format)) != 0)
 			print_error_and_exit("Error\nFile format is invalid");
 	}
 	file_descriptor = open(argv[1], O_RDONLY);
