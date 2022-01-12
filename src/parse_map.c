@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 17:53:13 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 19:09:18 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:25:42 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static void	parse_characters(t_map *map)
 	}
 	if (map->collectibles == 0 || map->exit_char == 0 || map->start == 0)
 		exit_program(map, "Error\nMap must have C, E, P characters\n");
+	if (map->exit_char != 1 || map->start != 1)
+		exit_program(map, "Error\nMap must have one player and one exit\n");
 }
 
 static void	is_rectangular(t_map *map, char **map_array)
