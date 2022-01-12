@@ -6,20 +6,32 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 17:41:45 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/12 19:09:23 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:00:22 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+static void	print_error_and_exit(char *message)
+{
+	printf("%s\n", message);
+	exit(1);
+}
+
 int	open_map(int argc, char *argv[])
 {
-	int	file_descriptor;
+	int		file_descriptor;
+	char	*file_format;
 
 	if (argc != 2)
+		print_error_and_exit("Error\nThe program must have one argument\n");
+	file_format = ft_strchr(argv[1], '.');
+	if (!file_format)
+		print_error_and_exit("Error\nFile format is invalid\n");
+	else
 	{
-		printf("Error\nThe program must have one argument\n");
-		exit(1);
+		if (file_format != ".ber")
+			print_error_and_exit("Error\nFile format is invalid");
 	}
 	file_descriptor = open(argv[1], O_RDONLY);
 	if (file_descriptor == -1)
