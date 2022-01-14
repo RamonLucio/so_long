@@ -6,7 +6,7 @@
 /*   By: rlucio-l <rlucio-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 17:53:13 by rlucio-l          #+#    #+#             */
-/*   Updated: 2022/01/13 00:34:20 by rlucio-l         ###   ########.fr       */
+/*   Updated: 2022/01/14 22:24:59 by rlucio-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static void	parse_characters(t_map *map)
 			map->exit_char++;
 		if (*map_ptr == 'P')
 			map->start++;
-		map_ptr++;
+		if (*map_ptr++ == '\n' && *map_ptr == '\n')
+			exit_program(map, "Error\nMap is misconfigured\n");
 	}
 	if (map->collectibles == 0 || map->exit_char == 0 || map->start == 0)
 		exit_program(map, "Error\nMap must have C, E, P characters\n");
